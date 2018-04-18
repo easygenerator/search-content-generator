@@ -1,0 +1,32 @@
+service: search-content-generator
+
+provider:
+  name: aws
+  role: ${env:AWS_DEFAULT_ROLE_ARN}
+  runtime: nodejs8.10
+  stage: development
+  region: us-east-1
+  memorySize: 128
+  timeout: 30
+  logRetentionInDays: 178
+  versionFunctions: false
+  environment:
+    S3_ENDPOINT: 's3.us-east-1.amazonaws.com'
+    S3_CACHE_BUCKET_NAME: search-content-${self:provider.stage}
+
+functions:
+  app:
+    handler: src/app.generate
+    description: function that generates search content for the requested course
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+
+package:
+  exclude:
+    - .dockerignore
+    - .eslintignore
+    - .eslintrc
+    - .prettierrc
+    - .vscode/**
+    - test/**
