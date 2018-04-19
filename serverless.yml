@@ -18,6 +18,8 @@ provider:
     NODE_ENV: ${self:provider.stage}
   deploymentBucket:
     name: lambda-packages${env:AWS_BUCKET_SUFFIX}
+  apiKeys:
+    - API_KEY
 
 functions:
   app:
@@ -25,9 +27,14 @@ functions:
     handler: src/app.generate
     description: function that generates search content for the requested course
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
-
+      - http:
+          path: /
+          method: ANY
+          private: true
+      - http:
+          path: /{proxy+}
+          method: ANY
+          private: true
 package:
   exclude:
     - .dockerignore
@@ -36,8 +43,3 @@ package:
     - .prettierrc
     - .vscode/**
     - test/**
-
-custom:
-  prune:
-    automatic: true
-    number: 3
