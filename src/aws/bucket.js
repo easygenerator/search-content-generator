@@ -7,7 +7,7 @@ class Bucket {
       key: config.aws.access.key,
       secret: config.aws.access.secret,
       bucket: config.aws.bucketName,
-      endpoint: config.aws.endpoint
+      region: config.aws.region
     });
   }
 

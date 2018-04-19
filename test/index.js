@@ -6,6 +6,7 @@ const http = require('../src/http');
 const constants = require('../src/constants');
 const searchContent = require('../src/routes/searchContent');
 const renderer = require('../src/renderer');
+const config = require('../src/config');
 
 module.exports = {
   cache,
@@ -15,5 +16,6 @@ module.exports = {
   http,
   constants,
   searchContent,
-  renderer
+  renderer,
+  config
 };

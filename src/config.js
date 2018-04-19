@@ -7,10 +7,13 @@ module.exports = {
   },
   aws: {
     access: {
-      key: process.env.AWS_ACCESS_KEY_ID,
-      secret: process.env.AWS_SECRET_ACCESS_KEY
+      key: process.env.S3_ACCESS_KEY_ID,
+      secret: process.env.S3_SECRET_ACCESS_KEY
     },
     bucketName: process.env.S3_CACHE_BUCKET_NAME,
-    endpoint: process.env.S3_ENDPOINT
+    region: process.env.S3_REGION || 'us-east-1'
+  },
+  cache: {
+    folder: process.env.NODE_ENV || 'development'
   }
 };
