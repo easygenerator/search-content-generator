@@ -4,7 +4,7 @@ provider:
   name: aws
   role: ${env:AWS_DEFAULT_ROLE_ARN}
   runtime: nodejs8.10
-  stage: development
+  stage: ${opt:stage, 'development'}
   region: us-east-1
   memorySize: 128
   timeout: 30
@@ -43,3 +43,4 @@ package:
     - .prettierrc
     - .vscode/**
     - test/**
+    - .circleci/**

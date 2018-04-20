@@ -1,0 +1,81 @@
+version: 2.0
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:latest
+    working_directory: ~/search-content-generator
+    steps:
+      - checkout
+
+      - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
+            npm install
+
+      - run: 
+          name: Run tests
+          command: npm test
+
+  deploy-staging:
+    docker:
+      - image: circleci/node:latest
+    working_directory: ~/search-content-generator
+    steps:
+      - run:
+          name: Deploy staging application 
+          command: |
+            env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
+            env AWS_DEFAULT_ROLE_ARN="$STAGING_AWS_DEFAULT_ROLE_ARN" \
+            env AWS_ACCESS_KEY_ID="$STAGING_AWS_ACCESS_KEY_ID" \
+            env AWS_SECRET_ACCESS_KEY="$STAGING_AWS_SECRET_ACCESS_KEY" \
+            serverless deploy --stage staging
+
+  deploy-production:
+    docker:
+      - image: circleci/node:latest
+    working_directory: ~/search-content-generator
+    steps:
+      - run:
+          name: Deploy production application 
+          command: |
+            env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
+            env AWS_DEFAULT_ROLE_ARN="$PRODUCTION_AWS_DEFAULT_ROLE_ARN" \
+            env AWS_ACCESS_KEY_ID="$PRODUCTION_AWS_ACCESS_KEY_ID" \
+            env AWS_SECRET_ACCESS_KEY="$PRODUCTION_AWS_SECRET_ACCESS_KEY" \
+            serverless deploy --stage production
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+                only: /^v.*/
+            branches:
+                only: master
+      - deploy-staging:
+          requires:
+            - build
+          filters:
+            branches:
+                only: master
+      - approve-deploy-production:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+      - deploy-production:
+          requires:
+            - approve-deploy-production
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
