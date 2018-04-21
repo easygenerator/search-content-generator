@@ -15,9 +15,8 @@ jobs:
       - checkout
 
       - run:
-          name: Install Serverless CLI and dependencies
+          name: Install dependencies
           command: |
-            sudo npm i -g serverless
             npm install
 
       - run: 
@@ -34,6 +33,12 @@ jobs:
     steps:
       - attach_workspace:
           at: *workspace_root
+
+      - run:
+          name: Install Serverless CLI
+          command: |
+            sudo npm i -g serverless
+
       - run:
           name: Deploy staging application 
           command: |
@@ -48,6 +53,12 @@ jobs:
     steps:
       - attach_workspace:
           at: *workspace_root
+
+      - run:
+          name: Install Serverless CLI
+          command: |
+            sudo npm i -g serverless
+
       - run:
           name: Deploy production application 
           command: |
