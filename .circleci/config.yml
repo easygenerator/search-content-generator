@@ -55,13 +55,13 @@ workflows:
             tags:
                 only: /^v.*/
             branches:
-                only: master
+                only: init-configuration
       - deploy-staging:
           requires:
             - build
           filters:
             branches:
-                only: master
+                only: init-configuration
       - approve-deploy-production:
           type: approval
           requires:
