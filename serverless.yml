@@ -19,7 +19,7 @@ provider:
   deploymentBucket:
     name: lambda-packages${env:AWS_BUCKET_SUFFIX}
   apiKeys:
-    - API_KEY
+    - API_KEY_${self:provider.stage}
 
 functions:
   app:
