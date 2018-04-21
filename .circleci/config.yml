@@ -1,7 +1,7 @@
 version: 2.0
 
 workspace_root: &workspace_root
-    /home/workspace/search-content-generator
+    /home/circleci/search-content-generator
 
 defaults: &defaults
   working_directory: *workspace_root
@@ -25,9 +25,9 @@ jobs:
           command: npm test
 
       - persist_to_workspace:
-          root: /
+          root: *workspace_root
           paths:
-            - ~/**
+            - .
 
   deploy-staging:
     <<: *defaults
