@@ -1,10 +1,13 @@
 version: 2.0
 
+defaults: &defaults
+  working_directory: /workspace/search-content-generator
+  docker:
+    - image: circleci/node:latest
+
 jobs:
   build:
-    docker:
-      - image: circleci/node:latest
-    working_directory: ~/search-content-generator
+    <<: *defaults
     steps:
       - checkout
 
@@ -18,11 +21,16 @@ jobs:
           name: Run tests
           command: npm test
 
+      - persist_to_workspace:
+          root: /workspace
+          paths:
+            - search-content-generator
+
   deploy-staging:
-    docker:
-      - image: circleci/node:latest
-    working_directory: ~/search-content-generator
+    <<: *defaults
     steps:
+      - attach_workspace:
+          at: /workspace
       - run:
           name: Deploy staging application 
           command: |
@@ -33,10 +41,10 @@ jobs:
             serverless deploy --stage staging
 
   deploy-production:
-    docker:
-      - image: circleci/node:latest
-    working_directory: ~/search-content-generator
+    <<: *defaults
     steps:
+      - attach_workspace:
+          at: /workspace
       - run:
           name: Deploy production application 
           command: |
