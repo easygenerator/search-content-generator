@@ -58,7 +58,12 @@ Application can be deployed as regular `express.js` app. Don't forget to specify
 
 ### Deployment with serverless
 
-Application can be deployed as AWS Lambda function. Use next command to deploy an app:
+Application can be deployed as AWS Lambda function. You have to have serverless.js installed globally. To do this execute next command:
+```
+npm install -g serverless
+```
+
+Next use following command to deploy the app:
 
 Windows PowerShell:
 ```
