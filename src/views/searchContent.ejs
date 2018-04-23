@@ -15,11 +15,11 @@
         <img style="width: 200px; height: 50px;" src="<%= logoUrl %>">
         <h1><%= title %></h1>
 
-        <% if (hasIntroductionContent) { %>
+        <% if (locals.hasIntroductionContent) { %>
             <h3><%- introductionContent %></h3>    
         <% } %>
 
-        <% sections && sections.forEach(function(section) { %>
+        <% locals.sections && sections.forEach(function(section) { %>
             <% if (section.questions && section.questions.length) { %>
 
                 <h2><%= section.title %></h2>

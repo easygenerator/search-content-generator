@@ -7,7 +7,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       ejs.renderFile(pagePath, viewData, {}, (err, html) => {
         if (err) {
-          reject(new Error('Failed to render page'));
+          reject(new Error(`Failed to render page. Reason: ${err.message}.`));
           return;
         }
 
