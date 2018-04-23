@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>easygenerator | <%= title %></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="pragma" content="no-cache" />
+</head>
+
+<body>
+    <main>
+        <img style="width: 200px; height: 50px;" src="<%= logoUrl %>">
+        <h1><%= title %></h1>
+
+        <% if (locals.hasIntroductionContent) { %>
+            <h3><%- introductionContent %></h3>    
+        <% } %>
+
+        <% locals.sections && sections.forEach(function(section) { %>
+            <% if (section.questions && section.questions.length) { %>
+
+                <h2><%= section.title %></h2>
+                <article>
+                    <% section.questions.forEach(function(question) { %>
+                        <div>
+                            <h3><%= question.title %></h3>
+                            
+                            <% if (question.learningContents && question.learningContents.length) { %>
+                                <section>
+                                    <% question.learningContents.forEach(function(learningContent) { %>
+                                        <h4><%- learningContent.html %></h4>
+                                        <% if (learningContent.children && learningContent.children.length) { %>
+                                            <section>
+                                                <% learningContent.children.forEach(function(child) { %>
+                                                    <h4><%- child.html %></h4>
+                                                <% }); %>
+                                            </section>
+                                        <% } %>
+                                    <% }); %>
+                                </section>
+                            <% } %>
+            
+                            <% if (question.questionInstructions && question.questionInstructions.length) { %>
+                                <section>
+                                    <% question.questionInstructions.forEach(function(questionInstruction) { %>
+                                        <h4><%- questionInstruction.html %></h4>
+                                        <% if (questionInstruction.children && questionInstruction.children.length) { %>
+                                            <section>
+                                                <% questionInstruction.children.forEach(function(child) { %>
+                                                    <h4><%- child.html %></h4>
+                                                <% }); %>
+                                            </section>
+                                        <% } %>
+                                    <% }); %>
+                                </section>
+                            <% } %>
+            
+                            <% if (['singleSelectText', 'multipleSelect', 'rankingText', 'statement'].includes(question.type) && question.answers) { %>
+                                <ul>
+                                    <% question.answers.forEach(function(answer) { %>
+                                        <li><%= answer.text %></li>
+                                    <% }); %>
+                                </ul>
+                            <% } %>
+
+                            <% if (question.type == 'singleSelectImage' && question.answers) { %>
+                                <ul>
+                                    <% question.answers.forEach(function(answer) { %>
+                                        <li>
+                                            <img src="<%= answer.image %>" />
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            <% } %>
+
+                            <% if (question.type == 'fillInTheBlank') { %>
+                                <section><%- question.content %></section>
+                            <% } %>
+                            
+                            <% if (question.type == 'textMatching' && question.answers) { %>
+                                <ul>
+                                    <% question.answers.forEach(function(answer) { %>
+                                        <li>
+                                            <div><%= answer.key %></div>
+                                            <div><%= answer.value %></div>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            <% } %>
+
+                            <% if (question.type == 'dragAndDropText') { %>
+                                <ul>
+                                    <% question.dropspots && question.dropspots.forEach(function(dropspot) { %>
+                                        <li><%= dropspot.text %></li>
+                                    <% }); %>
+                                    <img src="<%= question.background %>" />
+                                </ul>
+                            <% } %>
+                                
+                            <% if (question.type == 'hotspot') { %>
+                                <div>
+                                    <img src="<%= question.background %>" />
+                                </div>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                </article>
+            <% } %>
+        <% }); %>
+    </main>
+</body>
+</html>

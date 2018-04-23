@@ -1,0 +1,46 @@
+service: search-content-generator
+
+provider:
+  name: aws
+  role: ${env:AWS_DEFAULT_ROLE_ARN}
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'development'}
+  region: us-east-1
+  memorySize: 192
+  timeout: 30
+  logRetentionInDays: 180
+  versionFunctions: false
+  environment:
+    S3_REGION: ${self:provider.region}
+    S3_ACCESS_KEY_ID: ${env:AWS_ACCESS_KEY_ID}
+    S3_SECRET_ACCESS_KEY: ${env:AWS_SECRET_ACCESS_KEY}
+    S3_CACHE_BUCKET_NAME: search-content-cache-${self:provider.stage}${env:AWS_BUCKET_SUFFIX}
+    NODE_ENV: ${self:provider.stage}
+  deploymentBucket:
+    name: lambda-packages-${self:provider.stage}${env:AWS_BUCKET_SUFFIX}
+  apiKeys:
+    - API_KEY_${self:provider.stage}
+
+functions:
+  app:
+    name: search-content-generator-${self:provider.stage}
+    handler: src/app.generate
+    description: function that generates search content for the requested course
+    events:
+      - http:
+          path: /
+          method: ANY
+          private: true
+      - http:
+          path: /{proxy+}
+          method: ANY
+          private: true
+package:
+  exclude:
+    - .dockerignore
+    - .eslintignore
+    - .eslintrc
+    - .prettierrc
+    - .vscode/**
+    - test/**
+    - .circleci/**
