@@ -35,11 +35,20 @@ Application is wrapped as a serverless function (check [serverless.js](https://s
 
 Use `node.js 7.x or higher` to develop and run the app. 
 
-NOTE: The application is an express app wrapped with serverless framework. If you are going to deploy an app as lambda function do not use `node.js` higher than `8.10`. At the moment of writing `8.10` is the latest version supported by AWS lambda.
+NOTE: The application is an express app wrapped with serverless framework. If you are going to deploy an app as a lambda function do not use `node.js` higher than `8.10`. At the moment of writing `8.10` is the latest version supported by AWS lambda.
 
 ### Tests running
 
-To run test execute `npm run test` or `yarn test`
+To run tests execute `npm run test` or `yarn test`
+
+## Usage
+
+To get course search content you have to use `/search-content` path and to specify course url in the query string. For instance: 
+```
+http://localhost:3036/search-content?url=https://elearning.easygenerator.com/bf9a6632-9ce7-4007-92ca-0cb6fd1f7e29/
+```
+
+If you are using deployed AWS lamda app, you have to add `x-api-key` (AWS Lambda API Key) header to the request with the proper API Key. API Key will be generated during the serverless deployment and can be checked in AWS Api Gateway for you Lambda function.
 
 ## Deployment
 
@@ -47,13 +56,16 @@ To run test execute `npm run test` or `yarn test`
 
 Application can be deployed as regular `express.js` app. Don't forget to specify needed environment variables.
 
-### Deployement with serverless
+### Deployment with serverless
 
 Application can be deployed as AWS Lambda function. Use next command to deploy an app:
 
 Windows PowerShell:
 ```
-    $env:AWS_BUCKET_SUFFIX="[AWS_BUCKET_SUFFIX]";$env:AWS_DEFAULT_ROLE_ARN="[AWS_DEFAULT_ROLE_ARN]";$env:AWS_ACCESS_KEY_ID="[AWS_ACCESS_KEY_ID]"; $env:AWS_SECRET_ACCESS_KEY="[AWS_SECRET_ACCESS_KEY]"; serverless deploy
+    $env:AWS_BUCKET_SUFFIX="[AWS_BUCKET_SUFFIX]"; `
+    $env:AWS_DEFAULT_ROLE_ARN="[AWS_DEFAULT_ROLE_ARN]"; `
+    $env:AWS_ACCESS_KEY_ID="[AWS_ACCESS_KEY_ID]"; `
+    $env:AWS_SECRET_ACCESS_KEY="[AWS_SECRET_ACCESS_KEY]"; serverless deploy
 ```    
 
 Unix:
@@ -71,14 +83,20 @@ where:
 
 * AWS_DEFAULT_ROLE_ARN - AWS role that will be used by the function
 
-* AWS_ACCESS_KEY_ID - AWS access key that will be used by the serverless framework to deploy your funation and create all needed infrastructure
+* AWS_ACCESS_KEY_ID - AWS access key that will be used by the serverless framework to deploy your function and create/access all needed infrastructure
 
-* AWS_SECRET_ACCESS_KEY - AWS access secret that will be used by the serverless framework to deploy your funation and create all needed infrastructure
+* AWS_SECRET_ACCESS_KEY - AWS access secret that will be used by the serverless framework to deploy your function and create/access all needed infrastructure
 
-more information about serverless deployment you can find in the ([serverless.js documentation](https://serverless.com/framework/docs/)).
+IMPORTANT: when deploying with serverless you can skip S3_CACHE_BUCKET_NAME, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY  environment variables they will be initialized with variables listed above. You should also grant needed permissions to the user you are using for the deployment. For more information check [serverless.js AWS credentials guide](https://serverless.com/framework/docs/providers/aws/guide/credentials/).
+
+More information about serverless deployment you can find in the [serverless.js documentation](https://serverless.com/framework/docs/). 
 
 Deploying with serverless you can also specify build options. For instance you can specify stage you deploying to:
-
 ```
 serverless deploy --stage production
+```
+
+or in case you don't want to output API Key to the console (usefull for builds with external CI tools) you should add `--conceal` option:
+```
+serverless deploy --conceal --stage production
 ```
