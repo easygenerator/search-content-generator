@@ -12,8 +12,5 @@ module.exports = {
     },
     bucketName: process.env.S3_CACHE_BUCKET_NAME,
     region: process.env.S3_REGION || 'us-east-1'
-  },
-  cache: {
-    folder: process.env.NODE_ENV || 'development'
   }
 };

@@ -1,8 +1,7 @@
 const bucket = require('../aws/bucket');
-const config = require('../config');
 
 function getFileName(courseId) {
-  return `${config.cache.folder}/${courseId}.html`;
+  return `${courseId}.html`;
 }
 
 module.exports = {

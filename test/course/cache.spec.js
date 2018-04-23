@@ -14,9 +14,9 @@ describe('cache', () => {
   beforeEach(() => {
     sandbox
       .stub(bucket, 'getFileStream')
-      .withArgs(`${config.cache.folder}/${courseId}.html`)
+      .withArgs(`${courseId}.html`)
       .resolves(fileCache)
-      .withArgs(`${config.cache.folder}/${nonExistingCourseId}.html`)
+      .withArgs(`${nonExistingCourseId}.html`)
       .resolves(null);
 
     sandbox.stub(bucket, 'putBuffer');
@@ -30,7 +30,7 @@ describe('cache', () => {
     it('should request course file from the bucket', async () => {
       await cache.get(courseId, new Date());
       bucket.getFileStream
-        .withArgs(`${config.cache.folder}/${courseId}.html`)
+        .withArgs(`${courseId}.html`)
         .calledOnce.should.be.true();
     });
 
@@ -61,7 +61,7 @@ describe('cache', () => {
       let courseHtml = 'courseHtml';
       await cache.add(courseId, courseHtml);
       bucket.putBuffer
-        .withArgs(Buffer.from(courseHtml), `${config.cache.folder}/${courseId}.html`)
+        .withArgs(Buffer.from(courseHtml), `${courseId}.html`)
         .calledOnce.should.be.true();
     });
   });
