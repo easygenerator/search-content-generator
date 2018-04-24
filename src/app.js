@@ -9,8 +9,6 @@ let app = express();
 app.use(cors());
 app.use('/', routes);
 
-app.listen(config.app.port, config.app.ip, function() {
-  console.log(`Listening on port: ${this.address().port}`);
-});
+app.listen(config.app.port, config.app.ip);
 
 module.exports.generate = serverless(app);
