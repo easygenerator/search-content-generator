@@ -8,14 +8,14 @@ module.exports = {
   },
 
   async populateContent(courseUrl, courseData) {
-    let settings = await http.getJson(path.getSettingsFileUrl(courseUrl));
+    let settings = await http.getJsonIfExists(path.getSettingsFileUrl(courseUrl));
     let loadContentPromises = [];
 
     courseData.logoUrl =
       settings && settings.logo && settings.logo.url ? settings.logo.url : constants.defaultLogo;
 
     if (courseData.hasIntroductionContent) {
-      courseData.introductionContent = await http.getHtml(
+      courseData.introductionContent = await http.getHtmlIfExists(
         path.getCourseIntroductionFileUrl(courseUrl)
       );
     }
@@ -31,7 +31,7 @@ module.exports = {
             contentsToLoad.forEach(content => {
               loadContentPromises.push(
                 (async () => {
-                  content.html = await http.getHtml(
+                  content.html = await http.getHtmlIfExists(
                     path.getContentFileUrl(courseUrl, section.id, question.id, content.id)
                   );
                 })()
@@ -41,7 +41,7 @@ module.exports = {
                 content.children.forEach(childContent => {
                   loadContentPromises.push(
                     (async () => {
-                      childContent.html = await http.getHtml(
+                      childContent.html = await http.getHtmlIfExists(
                         path.getContentFileUrl(courseUrl, section.id, question.id, childContent.id)
                       );
                     })()
@@ -53,7 +53,7 @@ module.exports = {
             if (question.type === constants.fillInTheBlankQuestionType && question.hasContent) {
               loadContentPromises.push(
                 (async () => {
-                  question.content = await http.getHtml(
+                  question.content = await http.getHtmlIfExists(
                     path.getContentFileUrl(courseUrl, section.id, question.id)
                   );
                 })()
