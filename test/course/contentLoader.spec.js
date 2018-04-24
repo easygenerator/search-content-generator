@@ -18,12 +18,16 @@ describe('contentLoader', () => {
       .stub(http, 'getJson')
       .resolves({})
       .withArgs(path.getDataFileUrl(courseUrl))
-      .resolves(courseJson)
+      .resolves(courseJson);
+
+    sandbox
+      .stub(http, 'getJsonIfExists')
+      .resolves(null)
       .withArgs(path.getSettingsFileUrl(courseUrl))
       .resolves(settings);
 
     sandbox
-      .stub(http, 'getHtml')
+      .stub(http, 'getHtmlIfExists')
       .withArgs(path.getCourseIntroductionFileUrl(courseUrl))
       .resolves(introductionContent)
       .withArgs(path.getContentFileUrl(courseUrl, sectionIds[0], questionIds[0], contentIds[0]))

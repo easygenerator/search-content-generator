@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const { cache, bucket, config } = require('../index');
+const { cache, bucket } = require('../index');
 
 describe('cache', () => {
   let sandbox = sinon.createSandbox();
@@ -29,9 +29,7 @@ describe('cache', () => {
   context('get', () => {
     it('should request course file from the bucket', async () => {
       await cache.get(courseId, new Date());
-      bucket.getFileStream
-        .withArgs(`${courseId}.html`)
-        .calledOnce.should.be.true();
+      bucket.getFileStream.withArgs(`${courseId}.html`).calledOnce.should.be.true();
     });
 
     it('should return undefined if file doesnt exist', async () => {
