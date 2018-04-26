@@ -31,6 +31,18 @@ optional environment variables:
 
 Application is wrapped as a serverless function (check [serverless.js](https://serverless.com/framework/docs/)). That's why you can also [run it with serverless CLI locally](https://serverless.com/framework/docs/providers/aws/cli-reference/invoke-local/).
 
+### Run with Visual Studio Code
+
+If you are using Visual Studio Code you can use two existing launch configurations. To launch tests you can use `Run tests` configuration without any changes. If you want to run the app, you have to fill proper values for the next environment variables:
+```
+            "env": {
+                "S3_ACCESS_KEY_ID": "accessKey",
+                "S3_SECRET_ACCESS_KEY": "accessSecret",
+                "S3_CACHE_BUCKET_NAME": "bucketName"
+            }
+```
+then you are ready to go.
+
 ## Developing
 
 Use `node.js 7.x or higher` to develop and run the app. 

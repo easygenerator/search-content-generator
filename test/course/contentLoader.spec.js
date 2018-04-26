@@ -11,7 +11,7 @@ describe('contentLoader', () => {
   let sectionIds = ['section1', 'section2'];
   let questionIds = ['question1', 'question2', 'question3', 'question4'];
   let contentIds = ['content1', 'content2', 'content3'];
-  let fillInTheBlankContent = 'fillInTheBlankContent';
+  let questionContent = 'questionContent';
 
   beforeEach(() => {
     sandbox
@@ -37,7 +37,7 @@ describe('contentLoader', () => {
       .withArgs(path.getContentFileUrl(courseUrl, sectionIds[1], questionIds[3], contentIds[2]))
       .resolves(contentIds[2])
       .withArgs(path.getContentFileUrl(courseUrl, sectionIds[0], questionIds[0]))
-      .resolves(fillInTheBlankContent);
+      .resolves(questionContent);
   });
 
   afterEach(() => {
@@ -75,6 +75,18 @@ describe('contentLoader', () => {
 
         await contentLoader.populateContent(courseUrl, courseDataWithContent);
         courseDataWithContent.introductionContent.should.equal(introductionContent);
+      });
+    });
+
+    describe('when courseData has sections under objectives name (old courses)', () => {
+      it('should set courseData sections property to objectives value', async () => {
+        let obectives = [{ id: 'objective1' }, { id: 'objective2' }];
+        let courseDataWithObjectives = {
+          objectives: obectives
+        };
+
+        await contentLoader.populateContent(courseUrl, courseDataWithObjectives);
+        courseDataWithObjectives.sections.should.equal(obectives);
       });
     });
 
@@ -180,20 +192,14 @@ describe('contentLoader', () => {
         });
       });
 
-      describe('when question type is FillInTheBlank', () => {
-        describe('when question has content', () => {
-          beforeEach(() => {
-            courseDataWithSections.sections[0].questions[0].type =
-              constants.fillInTheBlankQuestionType;
-            courseDataWithSections.sections[0].questions[0].hasContent = true;
-          });
+      describe('when question has content', () => {
+        it('should populate question with the content', async () => {
+          courseDataWithSections.sections[0].questions[0].hasContent = true;
 
-          it('should populate question with the content', async () => {
-            await contentLoader.populateContent(courseUrl, courseDataWithSections);
-            courseDataWithSections.sections[0].questions[0].content.should.equal(
-              fillInTheBlankContent
-            );
-          });
+          await contentLoader.populateContent(courseUrl, courseDataWithSections);
+          courseDataWithSections.sections[0].questions[0].content.should.equal(
+            questionContent
+          );
         });
       });
     });
