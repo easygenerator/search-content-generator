@@ -33,7 +33,7 @@ Application is wrapped as a serverless function (check [serverless.js](https://s
 
 ### Run with Visual Studio Code
 
-If you are using Visual Studio Code you can use two existing launch configurations. To launch tests you can use `Run tests` configuration without any changes. If you want to run the app, you have to fill proper values for the next environment variables:
+If you are using Visual Studio Code you can use two existing launch configurations. To launch tests you can use `Run tests` configuration without any changes. If you want to run the app use `Launch Program` configuration but first you have to fill proper values for the next environment variables:
 ```
             "env": {
                 "S3_ACCESS_KEY_ID": "accessKey",
@@ -41,7 +41,6 @@ If you are using Visual Studio Code you can use two existing launch configuratio
                 "S3_CACHE_BUCKET_NAME": "bucketName"
             }
 ```
-then you are ready to go.
 
 ## Developing
 
