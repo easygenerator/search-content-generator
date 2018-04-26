@@ -76,7 +76,7 @@
                                 </ul>
                             <% } %>
 
-                            <% if (question.type == 'fillInTheBlank') { %>
+                            <% if (question.hasContent) { %>
                                 <section><%- question.content %></section>
                             <% } %>
                             

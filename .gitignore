@@ -60,7 +60,6 @@ typings/
 # serverless packages
 .serverless
 
-.vscode
 .DS_Store
 output
 *.env

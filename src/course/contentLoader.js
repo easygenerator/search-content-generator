@@ -20,6 +20,12 @@ module.exports = {
       );
     }
 
+    // support old courses with objectives instead of sections
+    if (!courseData.sections) {
+      courseData.sections = courseData.objectives;
+      delete courseData.objectives;
+    }
+
     if (courseData.sections) {
       courseData.sections.forEach(section => {
         if (section.questions) {
@@ -50,7 +56,7 @@ module.exports = {
               }
             });
 
-            if (question.type === constants.fillInTheBlankQuestionType && question.hasContent) {
+            if (question.hasContent) {
               loadContentPromises.push(
                 (async () => {
                   question.content = await http.getHtmlIfExists(
