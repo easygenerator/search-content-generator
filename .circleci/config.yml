@@ -144,11 +144,11 @@ workflows:
   deploy-production:
     jobs:
       - test:
-        filters:
-          branches:
-            ignore: /.*/
-          tags:
-            only: /^v.*/
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
       - approve-deploy-production:
           type: approval
           requires:
