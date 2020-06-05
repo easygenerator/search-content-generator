@@ -1,44 +1,61 @@
-const knox = require('knox');
+const AWS = require('aws-sdk');
 const config = require('../config');
 
 class Bucket {
   constructor() {
-    this.s3Client = knox.createClient({
-      key: config.aws.access.key,
-      secret: config.aws.access.secret,
-      bucket: config.aws.bucketName,
-      region: config.aws.region
+    this._client = new AWS.S3({
+      accessKeyId: config.aws.access.key,
+      secretAccessKey: config.aws.access.secret,
+      region: config.aws.region,
+      signatureVersion: 'v4'
     });
+    this._bucketName = config.aws.bucketName;
   }
 
-  getFileStream(fileName) {
-    return new Promise(resolve => {
-      this.s3Client.getFile(fileName, (err, res) => {
-        if (err || res.statusCode !== 200) {
-          return resolve(false);
-        }
-        resolve(res);
-      });
-    });
+  getFileStream(filename) {
+    return this._client
+      .getObject({
+        Bucket: this._bucketName,
+        Key: filename
+      })
+      .createReadStream();
   }
 
-  putBuffer(buffer, fileName) {
+  getFileInfo(filename) {
     return new Promise((resolve, reject) => {
-      if (!buffer) {
-        reject(new Error('Upload error: buffer is undefined'));
-        return;
-      }
+      this._client.headObject(
+        {
+          Bucket: this._bucketName,
+          Key: filename
+        },
+        (err, data) => {
+          if (!err) {
+            return resolve(data);
+          }
 
-      let headers = { 'Content-Type': 'text/html' };
-      this.s3Client.putBuffer(buffer, fileName, headers, (err, res) => {
-        if (err) {
+          if (err.statusCode === 404) {
+            return resolve(false);
+          }
+
           reject(err);
-          return;
         }
-        if (res.statusCode !== 200) {
-          reject(new Error(`Upload error: invalid status code. statusCode=${res.statusCode}`));
-          return;
+      );
+    });
+  }
+
+  putBuffer(buffer, path) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        Bucket: this._bucketName,
+        Key: path,
+        Body: buffer,
+        ContentType: 'text/html'
+      };
+      this._client.upload(params, (err) => {
+        if (err) {
+          return reject(err);
         }
+
         resolve(true);
       });
     });

@@ -10,12 +10,22 @@ describe('cache', () => {
       'last-modified': new Date()
     }
   };
+  let fileInfo = {
+    LastModified: new Date()
+  };
 
   beforeEach(() => {
     sandbox
       .stub(bucket, 'getFileStream')
       .withArgs(`${courseId}.html`)
       .resolves(fileCache)
+      .withArgs(`${nonExistingCourseId}.html`)
+      .resolves(null);
+
+    sandbox
+      .stub(bucket, 'getFileInfo')
+      .withArgs(`${courseId}.html`)
+      .resolves(fileInfo)
       .withArgs(`${nonExistingCourseId}.html`)
       .resolves(null);
 

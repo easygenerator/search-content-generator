@@ -80,6 +80,7 @@ Windows PowerShell:
 ```
     $env:AWS_BUCKET_SUFFIX="[AWS_BUCKET_SUFFIX]"; `
     $env:AWS_DEFAULT_ROLE_ARN="[AWS_DEFAULT_ROLE_ARN]"; `
+    $env:AWS_REGION="[AWS_REGION]"; `
     $env:AWS_ACCESS_KEY_ID="[AWS_ACCESS_KEY_ID]"; `
     $env:AWS_SECRET_ACCESS_KEY="[AWS_SECRET_ACCESS_KEY]"; serverless deploy
 ```    
@@ -88,6 +89,7 @@ Unix:
 ```
     env AWS_BUCKET_SUFFIX="[AWS_BUCKET_SUFFIX]" \
     env AWS_DEFAULT_ROLE_ARN="[AWS_DEFAULT_ROLE_ARN]" \
+    env AWS_REGION="[AWS_REGION]" \
     env AWS_ACCESS_KEY_ID="[AWS_ACCESS_KEY_ID]" \
     env AWS_SECRET_ACCESS_KEY="[AWS_SECRET_ACCESS_KEY]" \
     serverless deploy
@@ -98,6 +100,8 @@ where:
 * AWS_BUCKET_SUFFIX - is a bucket suffix to make it unique. May be your organization's domain, like `.example.com`
 
 * AWS_DEFAULT_ROLE_ARN - AWS role that will be used by the function
+
+* AWS_REGION - AWS region that will be used by the serverless framework to deploy your function and create/access all needed infrastructure
 
 * AWS_ACCESS_KEY_ID - AWS access key that will be used by the serverless framework to deploy your function and create/access all needed infrastructure
 
