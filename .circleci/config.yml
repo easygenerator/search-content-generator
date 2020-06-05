@@ -1,10 +1,6 @@
 version: 2.0
 
-workspace_root: &workspace_root
-    /home/circleci/search-content-generator
-
 defaults: &defaults
-  working_directory: *workspace_root
   docker:
     - image: circleci/node:latest
 
@@ -23,16 +19,15 @@ jobs:
           name: Run tests
           command: npm test
 
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .
-
   deploy-development:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: *workspace_root
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
 
       - run:
           name: Install Serverless CLI
@@ -52,8 +47,12 @@ jobs:
   cleanup-development:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: *workspace_root
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
 
       - run:
           name: Install Serverless CLI
@@ -73,8 +72,12 @@ jobs:
   deploy-staging:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: *workspace_root
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
 
       - run:
           name: Install Serverless CLI
@@ -94,8 +97,12 @@ jobs:
   deploy-production:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: *workspace_root
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
 
       - run:
           name: Install Serverless CLI
