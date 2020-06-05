@@ -119,7 +119,7 @@ workflows:
       - test:
           filters:
             branches:
-              only: /^development\/.+$/
+              only: development
       - deploy-development:
           requires:
             - test
