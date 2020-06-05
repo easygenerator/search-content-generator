@@ -124,12 +124,10 @@ workflows:
   deploy-development:
     jobs:
       - test:
-          context: Environment setup
           filters:
             branches:
               only: development
       - deploy-development:
-          context: Environment setup
           requires:
             - test
       - hold:
@@ -137,7 +135,6 @@ workflows:
           requires:
             - deploy-development
       - cleanup-development:
-          context: Environment setup
           requires:
             - hold
 
