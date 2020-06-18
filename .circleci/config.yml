@@ -1,15 +1,11 @@
 version: 2.0
 
-workspace_root: &workspace_root
-    /home/circleci/search-content-generator
-
 defaults: &defaults
-  working_directory: *workspace_root
   docker:
     - image: circleci/node:latest
 
 jobs:
-  build:
+  test:
     <<: *defaults
     steps:
       - checkout
@@ -23,16 +19,15 @@ jobs:
           name: Run tests
           command: npm test
 
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .
-
   deploy-development:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: *workspace_root
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
 
       - run:
           name: Install Serverless CLI
@@ -44,15 +39,45 @@ jobs:
           command: |
             env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
             env AWS_DEFAULT_ROLE_ARN="$DEVELOPMENT_AWS_DEFAULT_ROLE_ARN" \
+            env AWS_REGION="$DEVELOPMENT_AWS_REGION" \
             env AWS_ACCESS_KEY_ID="$DEVELOPMENT_AWS_ACCESS_KEY_ID" \
             env AWS_SECRET_ACCESS_KEY="$DEVELOPMENT_AWS_SECRET_ACCESS_KEY" \
             serverless deploy --conceal
 
+  cleanup-development:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
+
+      - run:
+          name: Install Serverless CLI
+          command: |
+            sudo npm i -g serverless
+
+      - run:
+          name: Cleanup development application 
+          command: |
+            env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
+            env AWS_DEFAULT_ROLE_ARN="$DEVELOPMENT_AWS_DEFAULT_ROLE_ARN" \
+            env AWS_REGION="$DEVELOPMENT_AWS_REGION" \
+            env AWS_ACCESS_KEY_ID="$DEVELOPMENT_AWS_ACCESS_KEY_ID" \
+            env AWS_SECRET_ACCESS_KEY="$DEVELOPMENT_AWS_SECRET_ACCESS_KEY" \
+            serverless remove --conceal
+
   deploy-staging:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: *workspace_root
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
 
       - run:
           name: Install Serverless CLI
@@ -64,6 +89,7 @@ jobs:
           command: |
             env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
             env AWS_DEFAULT_ROLE_ARN="$STAGING_AWS_DEFAULT_ROLE_ARN" \
+            env AWS_REGION="$STAGING_AWS_REGION" \
             env AWS_ACCESS_KEY_ID="$STAGING_AWS_ACCESS_KEY_ID" \
             env AWS_SECRET_ACCESS_KEY="$STAGING_AWS_SECRET_ACCESS_KEY" \
             serverless deploy --conceal --stage staging
@@ -71,8 +97,12 @@ jobs:
   deploy-production:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: *workspace_root
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
 
       - run:
           name: Install Serverless CLI
@@ -84,36 +114,52 @@ jobs:
           command: |
             env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
             env AWS_DEFAULT_ROLE_ARN="$PRODUCTION_AWS_DEFAULT_ROLE_ARN" \
+            env AWS_REGION="$PRODUCTION_AWS_REGION" \
             env AWS_ACCESS_KEY_ID="$PRODUCTION_AWS_ACCESS_KEY_ID" \
             env AWS_SECRET_ACCESS_KEY="$PRODUCTION_AWS_SECRET_ACCESS_KEY" \
             serverless deploy --conceal --stage production
 
 workflows:
   version: 2
-  build-and-deploy:
+  deploy-development:
     jobs:
-      - build:
+      - test:
           filters:
-            tags:
-                only: /^v.*/
             branches:
-                only: /^(master|development\/.+)$/
+              only: development
       - deploy-development:
           requires:
-            - build
+            - test
+      - hold:
+          type: approval
+          requires:
+            - deploy-development
+      - cleanup-development:
+          requires:
+            - hold
+
+  deploy-staging:
+    jobs:
+      - test:
           filters:
             branches:
-                only: /^development\/.+$/
+              only: master
       - deploy-staging:
           requires:
-            - build
+            - test
+
+  deploy-production:
+    jobs:
+      - test:
           filters:
             branches:
-                only: master
+              ignore: /.*/
+            tags:
+              only: /^v.*/
       - approve-deploy-production:
           type: approval
           requires:
-            - build
+            - test
           filters:
             branches:
               ignore: /.*/

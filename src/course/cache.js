@@ -6,12 +6,23 @@ function getFileName(courseId) {
 
 module.exports = {
   async get(courseId, publishedOn) {
-    let fileStream = await bucket.getFileStream(getFileName(courseId));
-    if (fileStream) {
-      let searchContentModifiedDate = new Date(fileStream.headers['last-modified']);
-      if (publishedOn <= searchContentModifiedDate) {
+    const filename = getFileName(courseId);
+    try {
+      const fileInfo = await bucket.getFileInfo(filename);
+      if (!fileInfo) {
+        return;
+      }
+
+      const fileStream = bucket.getFileStream(filename);
+      if (!fileStream) {
+        return;
+      }
+
+      if (publishedOn <= fileInfo.LastModified) {
         return fileStream;
       }
+    } catch (e) {
+      console.error(e);
     }
   },
   async add(courseId, html) {

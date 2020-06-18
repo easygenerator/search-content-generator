@@ -3,9 +3,9 @@ service: search-content-generator
 provider:
   name: aws
   role: ${env:AWS_DEFAULT_ROLE_ARN}
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   stage: ${opt:stage, 'development'}
-  region: us-east-1
+  region: ${env:AWS_REGION}
   memorySize: 128
   timeout: 30
   logRetentionInDays: 180
