@@ -59,7 +59,9 @@ To get course search content you have to use `/search-content` path and to speci
 http://localhost:3036/search-content?url=https://elearning.easygenerator.com/bf9a6632-9ce7-4007-92ca-0cb6fd1f7e29/
 ```
 
-If you are using deployed AWS lamda app, you have to add `x-api-key` (AWS Lambda API Key) header to the request with the proper API Key. API Key will be generated during the serverless deployment and can be checked in AWS Api Gateway for you Lambda function.
+If you are using deployed AWS lambda app, you have to add `x-api-key` (AWS Lambda API Key) header to the request with the proper API Key.
+
+> **API Key** and **Service url** will be generated during the serverless deployment and can be checked in AWS for you Lambda function.
 
 ## Deployment
 
