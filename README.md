@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 
 1. Clone this repository locally
-2. Run `npm install` or `yarn` in the root directory
+2. Run `npm install` in the root directory
 3. Configure several environment variables:
 
 * S3_CACHE_BUCKET_NAME - AWS bucket name to cache generated files 
@@ -17,7 +17,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 * S3_SECRET_ACCESS_KEY - AWS access secret to access the cache bucket 
 
-optional environment variables:
+    optional environment variables:
 
 * S3_REGION - AWS bucket region. Default is `us-east-1`
 
@@ -25,32 +25,32 @@ optional environment variables:
 
 * PORT - Port for the express app. Default is `3036`
 
-4. Run `npm start` or `yarn start` to run application locally
+4. Run `npm start` to run application locally
+
+## Developing
+
+> Use `node.js 10.x or higher` to develop and run the app.
 
 ### Run with serverless
 
-Application is wrapped as a serverless function (check [serverless.js](https://serverless.com/framework/docs/)). That's why you can also [run it with serverless CLI locally](https://serverless.com/framework/docs/providers/aws/cli-reference/invoke-local/).
+You need to create branch `development` and it will be deployed to AWS using `serverless`
+
+Also you can [run it with serverless CLI locally](https://serverless.com/framework/docs/providers/aws/cli-reference/invoke-local/).
 
 ### Run with Visual Studio Code
 
 If you are using Visual Studio Code you can use two existing launch configurations. To launch tests you can use `Run tests` configuration without any changes. If you want to run the app use `Launch Program` configuration but first you have to fill proper values for the next environment variables:
 ```
-            "env": {
-                "S3_ACCESS_KEY_ID": "accessKey",
-                "S3_SECRET_ACCESS_KEY": "accessSecret",
-                "S3_CACHE_BUCKET_NAME": "bucketName"
-            }
+"env": {
+    "S3_ACCESS_KEY_ID": "accessKey",
+    "S3_SECRET_ACCESS_KEY": "accessSecret",
+    "S3_CACHE_BUCKET_NAME": "bucketName"
+}
 ```
-
-## Developing
-
-Use `node.js 7.x or higher` to develop and run the app. 
-
-NOTE: The application is an express app wrapped with serverless framework. If you are going to deploy an app as a lambda function do not use `node.js` higher than `8.10`. At the moment of writing `8.10` is the latest version supported by AWS lambda.
 
 ### Tests running
 
-To run tests execute `npm run test` or `yarn test`
+To run tests execute `npm run test`
 
 ## Usage
 
@@ -120,3 +120,9 @@ or in case you don't want to output API Key to the console (usefull for builds w
 ```
 serverless deploy --conceal --stage production
 ```
+
+### CI/CD
+
+After merge any changes to `master` they will be automatically deployed to staging instance on AWS using **serverless**
+
+To deploy changes to production run `npm version {major|minor|patch}`
