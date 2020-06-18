@@ -39,7 +39,7 @@ jobs:
           command: |
             env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
             env AWS_DEFAULT_ROLE_ARN="$DEVELOPMENT_AWS_DEFAULT_ROLE_ARN" \
-            env AWS_REGION="DEVELOPMENT_AWS_REGION" \
+            env AWS_REGION="$DEVELOPMENT_AWS_REGION" \
             env AWS_ACCESS_KEY_ID="$DEVELOPMENT_AWS_ACCESS_KEY_ID" \
             env AWS_SECRET_ACCESS_KEY="$DEVELOPMENT_AWS_SECRET_ACCESS_KEY" \
             serverless deploy --conceal
@@ -64,7 +64,7 @@ jobs:
           command: |
             env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
             env AWS_DEFAULT_ROLE_ARN="$DEVELOPMENT_AWS_DEFAULT_ROLE_ARN" \
-            env AWS_REGION="DEVELOPMENT_AWS_REGION" \
+            env AWS_REGION="$DEVELOPMENT_AWS_REGION" \
             env AWS_ACCESS_KEY_ID="$DEVELOPMENT_AWS_ACCESS_KEY_ID" \
             env AWS_SECRET_ACCESS_KEY="$DEVELOPMENT_AWS_SECRET_ACCESS_KEY" \
             serverless remove --conceal
@@ -89,7 +89,7 @@ jobs:
           command: |
             env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
             env AWS_DEFAULT_ROLE_ARN="$STAGING_AWS_DEFAULT_ROLE_ARN" \
-            env AWS_REGION="STAGING_AWS_REGION" \
+            env AWS_REGION="$STAGING_AWS_REGION" \
             env AWS_ACCESS_KEY_ID="$STAGING_AWS_ACCESS_KEY_ID" \
             env AWS_SECRET_ACCESS_KEY="$STAGING_AWS_SECRET_ACCESS_KEY" \
             serverless deploy --conceal --stage staging
@@ -114,7 +114,7 @@ jobs:
           command: |
             env AWS_BUCKET_SUFFIX="$AWS_BUCKET_SUFFIX" \
             env AWS_DEFAULT_ROLE_ARN="$PRODUCTION_AWS_DEFAULT_ROLE_ARN" \
-            env AWS_REGION="PRODUCTION_AWS_REGION" \
+            env AWS_REGION="$PRODUCTION_AWS_REGION" \
             env AWS_ACCESS_KEY_ID="$PRODUCTION_AWS_ACCESS_KEY_ID" \
             env AWS_SECRET_ACCESS_KEY="$PRODUCTION_AWS_SECRET_ACCESS_KEY" \
             serverless deploy --conceal --stage production
