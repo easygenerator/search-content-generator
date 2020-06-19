@@ -8,7 +8,8 @@
     "precommit": "lint-staged",
     "test": "cross-env S3_ACCESS_KEY_ID=accessKey S3_SECRET_ACCESS_KEY=accessSecret S3_CACHE_BUCKET_NAME=bucketName node node_modules/mocha/bin/mocha test/**/*.spec.js",
     "lint": "eslint -c .eslintrc ./",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "postversion": "git push && git push --tags"
   },
   "lint-staged": {
     "*.js": [

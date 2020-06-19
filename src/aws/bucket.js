@@ -51,7 +51,7 @@ class Bucket {
         Body: buffer,
         ContentType: 'text/html'
       };
-      this._client.upload(params, (err) => {
+      this._client.upload(params, err => {
         if (err) {
           return reject(err);
         }

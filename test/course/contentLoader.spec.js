@@ -197,9 +197,7 @@ describe('contentLoader', () => {
           courseDataWithSections.sections[0].questions[0].hasContent = true;
 
           await contentLoader.populateContent(courseUrl, courseDataWithSections);
-          courseDataWithSections.sections[0].questions[0].content.should.equal(
-            questionContent
-          );
+          courseDataWithSections.sections[0].questions[0].content.should.equal(questionContent);
         });
       });
     });
